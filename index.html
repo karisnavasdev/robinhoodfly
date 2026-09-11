@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robinhood Fly | $ROBINFLY</title>
+  <meta name="description" content="Robinhood Fly ($ROBINFLY) — the pixel housefly buzzing on-chain. CA: 0xcomingsoon" />
+  <link rel="icon" href="assets/logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --rh-green: #00c805;
+      --rh-green-dark: #00a004;
+      --rh-green-deep: #007a03;
+      --bg: #06100a;
+      --panel: #102418;
+      --ink: #e8ffe8;
+      --muted: #8fbf96;
+      --pixel: 4px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "VT323", monospace;
+      font-size: 24px;
+      line-height: 1.35;
+      color: var(--ink);
+      background: var(--bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 7px, rgba(0, 200, 5, 0.07) 7px 8px),
+        repeating-linear-gradient(0deg, transparent 0 7px, rgba(0, 200, 5, 0.07) 7px 8px),
+        radial-gradient(ellipse at 50% -10%, #1a4a22 0%, var(--bg) 58%);
+      animation: grid-drift 14s linear infinite;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 38;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(0deg, rgba(0, 200, 5, 0.045) 0 1px, transparent 1px 3px),
+        repeating-linear-gradient(90deg, rgba(0, 12, 4, 0.18) 0 1px, transparent 1px 4px);
+      animation: scan 7s linear infinite;
+    }
+
+    .pixel-screen,
+    #pixel-rain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    #pixel-rain {
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+      opacity: 0.7;
+    }
+
+    .pixel-screen {
+      z-index: 37;
+      box-shadow: inset 0 0 120px 24px rgba(0, 40, 8, 0.55);
+      background:
+        linear-gradient(rgba(0, 200, 5, 0.035), rgba(0, 200, 5, 0.035)),
+        repeating-conic-gradient(rgba(0, 200, 5, 0.05) 0% 25%, transparent 0% 50%) 0 0 / 4px 4px;
+    }
+
+    .pixel-screen::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 18%;
+      background: linear-gradient(180deg, rgba(0, 255, 80, 0.12), transparent);
+      animation: beam 3.4s linear infinite;
+    }
+
+    .pixel-screen::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 4px solid rgba(0, 200, 5, 0.28);
+      box-shadow:
+        0 0 0 4px rgba(0, 20, 6, 0.5),
+        inset 0 0 0 4px rgba(0, 200, 5, 0.08);
+      pointer-events: none;
+    }
+
+    @keyframes grid-drift {
+      from { background-position: 0 0, 0 0, 0 0; }
+      to { background-position: 8px 8px, 8px 8px, 0 0; }
+    }
+
+    @keyframes scan {
+      from { transform: translateY(0); }
+      to { transform: translateY(4px); }
+    }
+
+    @keyframes beam {
+      from { top: -20%; opacity: 0.15; }
+      to { top: 110%; opacity: 0.55; }
+    }
+
+    img { image-rendering: pixelated; image-rendering: crisp-edges; max-width: 100%; display: block; }
+    .gallery img,
+    .lightbox img { image-rendering: auto; }
+    a { color: var(--rh-green); text-decoration: none; }
+    a:hover { color: #7dff80; }
+
+    .pixel-border {
+      border: var(--pixel) solid var(--rh-green);
+      box-shadow:
+        0 var(--pixel) 0 #003b02,
+        inset 0 0 0 2px #003b02;
+    }
+
+    .wrap {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .boot {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: #000;
+      display: grid;
+      place-items: center;
+      animation: boot-out 1.1s steps(6, end) 1.15s forwards;
+    }
+
+    .boot img {
+      width: 96px;
+      height: 96px;
+      animation: boot-spin 0.28s steps(2, end) infinite, boot-glow 0.4s steps(2, end) infinite;
+    }
+
+    .boot p {
+      position: absolute;
+      bottom: 18%;
+      font-family: "Press Start 2P", monospace;
+      font-size: 10px;
+      color: var(--rh-green);
+      animation: blink 0.5s steps(1, end) infinite;
+    }
+
+    @keyframes boot-spin {
+      0% { transform: translate(-6px, 4px) rotate(-8deg); }
+      50% { transform: translate(8px, -6px) rotate(10deg); }
+      100% { transform: translate(-6px, 4px) rotate(-8deg); }
+    }
+
+    @keyframes boot-glow {
+      0%, 100% { filter: drop-shadow(0 0 0 var(--rh-green)); }
+      50% { filter: drop-shadow(0 0 16px var(--rh-green)); }
+    }
+
+    @keyframes boot-out {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(6, 16, 10, 0.94);
+      border-bottom: var(--pixel) solid var(--rh-green);
+      animation: drop-in 0.5s steps(5, end) both;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--ink);
+    }
+
+    .brand img,
+    .hero-card img {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--rh-green);
+      background: #000;
+      animation: hoverfly 0.28s steps(2, end) infinite;
+    }
+
+    .brand-name {
+      font-family: "Press Start 2P", monospace;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .brand-name span {
+      color: var(--rh-green);
+      display: block;
+      font-size: 9px;
+      margin-top: 4px;
+      animation: flicker 2.4s steps(2, end) infinite;
+    }
+
+    nav { display: flex; flex-wrap: wrap; gap: 8px 14px; }
+    nav a {
+      font-family: "Press Start 2P", monospace;
+      font-size: 9px;
+      color: var(--ink);
+      padding: 8px 6px;
+      position: relative;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      bottom: 2px;
+      height: 3px;
+      background: var(--rh-green);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.15s steps(3, end);
+    }
+    nav a:hover { color: var(--rh-green); }
+    nav a:hover::after { transform: scaleX(1); }
+
+    .tape {
+      overflow: hidden;
+      border-bottom: 3px solid var(--rh-green-deep);
+      background: #041208;
+      color: var(--rh-green);
+      font-family: "Press Start 2P", monospace;
+      font-size: 9px;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .tape-track {
+      display: inline-block;
+      padding: 8px 0;
+      animation: marquee 16s linear infinite;
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .hero { padding: 28px 0 10px; }
+
+    .banner-wrap {
+      position: relative;
+      overflow: hidden;
+      background: #000;
+      animation: pop-in 0.55s steps(6, end) both, border-pulse 1.8s steps(2, end) infinite;
+    }
+
+    .banner-wrap img {
+      width: 100%;
+      height: auto;
+      animation: banner-zoom 8s steps(8, end) infinite alternate;
+    }
+
+    .banner-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(0, 200, 5, 0.12));
+      pointer-events: none;
+      animation: sweep 3.2s steps(8, end) infinite;
+    }
+
+    @keyframes banner-zoom {
+      from { transform: scale(1) translateY(0); }
+      to { transform: scale(1.06) translateY(-6px); }
+    }
+
+    @keyframes sweep {
+      0% { opacity: 0.15; }
+      50% { opacity: 0.45; }
+      100% { opacity: 0.15; }
+    }
+
+    .hero-card {
+      margin-top: 18px;
+      background: var(--panel);
+      padding: 22px 20px;
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 18px;
+      align-items: center;
+      animation: pop-in 0.55s steps(6, end) 0.12s both;
+    }
+
+    .hero-card img {
+      width: 88px;
+      height: 88px;
+    }
+
+    h1 {
+      font-family: "Press Start 2P", monospace;
+      font-size: clamp(16px, 3vw, 26px);
+      color: var(--rh-green);
+      text-shadow: 3px 3px 0 #003b02;
+      margin-bottom: 10px;
+      animation: title-glitch 3s steps(2, end) infinite;
+    }
+
+    .ticker {
+      display: inline-block;
+      font-family: "Press Start 2P", monospace;
+      font-size: 10px;
+      background: var(--rh-green);
+      color: #041208;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      animation: ticker-bounce 0.8s steps(2, end) infinite;
+    }
+
+    .lead { color: var(--muted); max-width: 62ch; }
+
+    .ca-panel {
+      margin: 22px 0 8px;
+      background: #07160c;
+      padding: 18px;
+      animation: pop-in 0.55s steps(6, end) 0.22s both, border-pulse 2.2s steps(2, end) infinite;
+    }
+
+    .ca-label {
+      font-family: "Press Start 2P", monospace;
+      font-size: 10px;
+      color: var(--rh-green);
+      margin-bottom: 12px;
+      animation: blink 1.1s steps(1, end) infinite;
+    }
+
+    .ca-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .ca-box {
+      flex: 1 1 260px;
+      background: #000;
+      color: var(--rh-green);
+      font-family: "Press Start 2P", monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      padding: 14px 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      border: 3px solid var(--rh-green-deep);
+      position: relative;
+    }
+
+    .ca-box::after {
+      content: "_";
+      animation: blink 0.6s steps(1, end) infinite;
+    }
+
+    button, .btn {
+      font-family: "Press Start 2P", monospace;
+      font-size: 10px;
+      border: 3px solid #003b02;
+      background: var(--rh-green);
+      color: #041208;
+      padding: 14px 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #003b02;
+      animation: btn-pulse 1.4s steps(2, end) infinite;
+    }
+
+    button:hover, .btn:hover {
+      background: #2cff31;
+      animation: none;
+    }
+
+    button:active, .btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #003b02;
+    }
+
+    .copy-ok { background: #fff45a !important; animation: none; }
+
+    section { padding: 42px 0; }
+
+    h2 {
+      font-family: "Press Start 2P", monospace;
+      font-size: clamp(14px, 2.4vw, 20px);
+      color: var(--rh-green);
+      margin-bottom: 18px;
+      text-shadow: 3px 3px 0 #003b02;
+    }
+
+    .panel { background: var(--panel); padding: 22px; }
+    .about p { margin-bottom: 14px; color: #d6f5d8; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .step {
+      background: #07160c;
+      padding: 16px;
+      border: 3px solid var(--rh-green-deep);
+      transition: transform 0.12s steps(2, end), border-color 0.12s steps(2, end);
+    }
+
+    .step:hover {
+      transform: translateY(-6px);
+      border-color: var(--rh-green);
+    }
+
+    .step-num {
+      font-family: "Press Start 2P", monospace;
+      font-size: 10px;
+      color: #041208;
+      background: var(--rh-green);
+      display: inline-block;
+      padding: 6px 8px;
+      margin-bottom: 10px;
+    }
+
+    .step h3 {
+      font-family: "Press Start 2P", monospace;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .step p { color: var(--muted); font-size: 22px; }
+
+    .chart-frame { background: #000; min-height: 520px; }
+    .chart-frame iframe {
+      width: 100%;
+      height: 560px;
+      border: 0;
+      display: block;
+    }
+
+    .socials { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    footer {
+      border-top: var(--pixel) solid var(--rh-green);
+      padding: 22px 0 36px;
+      color: var(--muted);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer small { display: block; font-size: 18px; margin-top: 6px; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    .reveal.in {
+      animation: pop-in 0.5s steps(6, end) forwards;
+    }
+
+    .reveal.in .step:nth-child(1) { animation: pop-in 0.45s steps(5, end) 0.05s both; }
+    .reveal.in .step:nth-child(2) { animation: pop-in 0.45s steps(5, end) 0.12s both; }
+    .reveal.in .step:nth-child(3) { animation: pop-in 0.45s steps(5, end) 0.19s both; }
+    .reveal.in .step:nth-child(4) { animation: pop-in 0.45s steps(5, end) 0.26s both; }
+
+    .flies {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 12;
+      overflow: hidden;
+    }
+
+    .fly-sprite {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      filter: drop-shadow(0 0 6px rgba(0, 200, 5, 0.55));
+      animation: fly-a 9s linear infinite;
+    }
+
+    .fly-sprite:nth-child(2) { width: 28px; height: 28px; animation-name: fly-b; animation-duration: 11s; }
+    .fly-sprite:nth-child(3) { width: 36px; height: 36px; animation-name: fly-c; animation-duration: 8s; animation-delay: -3s; }
+    .fly-sprite:nth-child(4) { width: 24px; height: 24px; animation-name: fly-d; animation-duration: 13s; }
+    .fly-sprite:nth-child(5) { width: 48px; height: 48px; animation-name: fly-e; animation-duration: 10s; animation-delay: -5s; }
+    .fly-sprite:nth-child(6) { width: 22px; height: 22px; animation-name: fly-a; animation-duration: 7s; animation-delay: -2s; }
+
+    @keyframes fly-a {
+      0%   { left: -8%; top: 18%; transform: rotate(-12deg); }
+      20%  { left: 22%; top: 8%; transform: rotate(18deg); }
+      40%  { left: 48%; top: 28%; transform: rotate(-8deg); }
+      60%  { left: 70%; top: 12%; transform: rotate(22deg); }
+      80%  { left: 88%; top: 36%; transform: rotate(-16deg); }
+      100% { left: 110%; top: 14%; transform: rotate(10deg); }
+    }
+
+    @keyframes fly-b {
+      0%   { left: 110%; top: 62%; transform: rotate(160deg) scaleX(-1); }
+      25%  { left: 74%; top: 78%; transform: rotate(200deg) scaleX(-1); }
+      50%  { left: 40%; top: 54%; transform: rotate(150deg) scaleX(-1); }
+      75%  { left: 16%; top: 82%; transform: rotate(190deg) scaleX(-1); }
+      100% { left: -12%; top: 60%; transform: rotate(170deg) scaleX(-1); }
+    }
+
+    @keyframes fly-c {
+      0%   { left: -10%; top: 70%; transform: rotate(8deg); }
+      30%  { left: 30%; top: 42%; transform: rotate(-20deg); }
+      55%  { left: 58%; top: 80%; transform: rotate(14deg); }
+      80%  { left: 86%; top: 48%; transform: rotate(-10deg); }
+      100% { left: 112%; top: 72%; transform: rotate(6deg); }
+    }
+
+    @keyframes fly-d {
+      0%   { left: 50%; top: -8%; transform: rotate(80deg); }
+      40%  { left: 18%; top: 40%; transform: rotate(40deg); }
+      70%  { left: 78%; top: 66%; transform: rotate(110deg); }
+      100% { left: 40%; top: 108%; transform: rotate(70deg); }
+    }
+
+    @keyframes fly-e {
+      0%   { left: 8%; top: 90%; transform: rotate(-30deg); }
+      35%  { left: 36%; top: 20%; transform: rotate(25deg); }
+      65%  { left: 82%; top: 38%; transform: rotate(-18deg); }
+      100% { left: 108%; top: 6%; transform: rotate(12deg); }
+    }
+
+    @keyframes hoverfly {
+      0%, 100% { transform: translateY(0) rotate(-4deg); }
+      50% { transform: translateY(-6px) rotate(6deg); }
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    @keyframes flicker {
+      0%, 90%, 100% { opacity: 1; }
+      92% { opacity: 0.25; }
+      94% { opacity: 1; }
+      96% { opacity: 0.4; }
+    }
+
+    @keyframes title-glitch {
+      0%, 86%, 100% { transform: translate(0); text-shadow: 3px 3px 0 #003b02; }
+      88% { transform: translate(-3px, 1px); text-shadow: 3px 0 0 #fff45a, -3px 0 0 #00c805; }
+      90% { transform: translate(3px, -1px); text-shadow: -3px 0 0 #fff45a, 3px 0 0 #00c805; }
+      92% { transform: translate(0); text-shadow: 3px 3px 0 #003b02; }
+    }
+
+    @keyframes ticker-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    @keyframes btn-pulse {
+      0%, 100% { box-shadow: 0 4px 0 #003b02, 0 0 0 0 rgba(0, 200, 5, 0.35); }
+      50% { box-shadow: 0 4px 0 #003b02, 0 0 0 6px rgba(0, 200, 5, 0); }
+    }
+
+    @keyframes border-pulse {
+      0%, 100% { box-shadow: 0 4px 0 #003b02, 0 0 0 0 rgba(0, 200, 5, 0.45); }
+      50% { box-shadow: 0 4px 0 #003b02, 0 0 18px 2px rgba(0, 200, 5, 0.35); }
+    }
+
+    @keyframes pop-in {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes drop-in {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .meme-card {
+      background: #07160c;
+      padding: 8px;
+      border: 3px solid var(--rh-green-deep);
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.12s steps(2, end), border-color 0.12s steps(2, end);
+    }
+
+    .meme-card:hover {
+      transform: translateY(-6px) rotate(-1deg);
+      border-color: var(--rh-green);
+    }
+
+    .meme-card img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      background: #000;
+    }
+
+    .meme-card figcaption {
+      font-family: "Press Start 2P", monospace;
+      font-size: 8px;
+      line-height: 1.5;
+      color: var(--rh-green);
+      padding: 10px 4px 4px;
+    }
+
+    .reveal.in .meme-card:nth-child(1) { animation: pop-in 0.45s steps(5, end) 0.04s both; }
+    .reveal.in .meme-card:nth-child(2) { animation: pop-in 0.45s steps(5, end) 0.10s both; }
+    .reveal.in .meme-card:nth-child(3) { animation: pop-in 0.45s steps(5, end) 0.16s both; }
+    .reveal.in .meme-card:nth-child(4) { animation: pop-in 0.45s steps(5, end) 0.22s both; }
+    .reveal.in .meme-card:nth-child(5) { animation: pop-in 0.45s steps(5, end) 0.28s both; }
+    .reveal.in .meme-card:nth-child(6) { animation: pop-in 0.45s steps(5, end) 0.34s both; }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      display: none;
+      place-items: center;
+      background: rgba(0, 0, 0, 0.86);
+      padding: 24px;
+    }
+
+    .lightbox.open { display: grid; }
+
+    .lightbox-frame {
+      width: min(720px, 100%);
+      background: #041208;
+      padding: 10px;
+    }
+
+    .lightbox-frame img {
+      width: 100%;
+      height: auto;
+      max-height: 72vh;
+      object-fit: contain;
+      background: #000;
+    }
+
+    .lightbox-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 4px 2px;
+    }
+
+    .lightbox-bar p {
+      font-family: "Press Start 2P", monospace;
+      font-size: 9px;
+      color: var(--rh-green);
+    }
+
+    .lightbox-nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    @media (max-width: 700px) {
+      body { font-size: 20px; }
+      .nav { flex-direction: column; align-items: flex-start; }
+      nav a { font-size: 8px; }
+      .hero-card { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .chart-frame iframe { height: 420px; }
+      .fly-sprite:nth-child(5),
+      .fly-sprite:nth-child(6) { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      .boot { display: none; }
+      .reveal { opacity: 1; transform: none; }
+      #pixel-rain,
+      .pixel-screen { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="pixel-rain" aria-hidden="true"></canvas>
+  <div class="pixel-screen" aria-hidden="true"></div>
+  <div class="boot" aria-hidden="true">
+    <img src="assets/logo.png" alt="" />
+    <p>BUZZING IN...</p>
+  </div>
+
+  <div class="flies" aria-hidden="true">
+    <img class="fly-sprite" src="assets/logo.png" alt="" />
+    <img class="fly-sprite" src="assets/logo.png" alt="" />
+    <img class="fly-sprite" src="assets/logo.png" alt="" />
+    <img class="fly-sprite" src="assets/logo.png" alt="" />
+    <img class="fly-sprite" src="assets/logo.png" alt="" />
+    <img class="fly-sprite" src="assets/logo.png" alt="" />
+  </div>
+
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top">
+        <img src="assets/logo.png" alt="Robinhood Fly housefly logo" />
+        <div class="brand-name">ROBINHOOD FLY<span>$ROBINFLY</span></div>
+      </a>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#memes">Memes</a>
+        <a href="#buy">How to Buy</a>
+        <a href="#chart">Chart</a>
+        <a href="#socials">Socials</a>
+      </nav>
+    </div>
+    <div class="tape">
+      <div class="tape-track">
+        $ROBINFLY &nbsp;//&nbsp; BUZZ THE CHART &nbsp;//&nbsp; CA 0xcomingsoon &nbsp;//&nbsp; JOIN THE SWARM &nbsp;//&nbsp; NOT A BIRD &nbsp;//&nbsp; A FLY &nbsp;//&nbsp;
+        $ROBINFLY &nbsp;//&nbsp; BUZZ THE CHART &nbsp;//&nbsp; CA 0xcomingsoon &nbsp;//&nbsp; JOIN THE SWARM &nbsp;//&nbsp; NOT A BIRD &nbsp;//&nbsp; A FLY &nbsp;//&nbsp;
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <div class="banner-wrap pixel-border">
+        <img src="assets/banner.png" alt="Robinhood Fly pixel banner" />
+      </div>
+
+      <div class="hero-card pixel-border">
+        <img src="assets/logo.png" alt="Robinhood Fly pixel housefly" />
+        <div>
+          <h1>ROBINHOOD FLY</h1>
+          <div class="ticker">TICKER $ROBINFLY</div>
+          <p class="lead">Not a bird. A fly. The pixel housefly that buzzes the charts and dumps green on the swarm.</p>
+        </div>
+      </div>
+
+      <div class="ca-panel pixel-border">
+        <div class="ca-label">CONTRACT ADDRESS</div>
+        <div class="ca-row">
+          <div class="ca-box" id="ca">0xcomingsoon</div>
+          <button type="button" id="copy-ca">COPY CA</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="wrap reveal">
+        <h2>ABOUT</h2>
+        <div class="panel pixel-border about">
+          <p>Robinhood Fly is a pixel-era memecoin for people who want the green, not the gatekeepers. $ROBINFLY is a housefly, not a bird — six legs, two wings, zero permission.</p>
+          <p>No suits. No flock. Just a swarm, a contract, and a chart that only goes one way if we buzz hard enough.</p>
+          <p>Name: <strong>Robinhood Fly</strong> &nbsp;|&nbsp; Ticker: <strong>$ROBINFLY</strong> &nbsp;|&nbsp; CA: <strong>0xcomingsoon</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="memes">
+      <div class="wrap reveal">
+        <h2>MEME GALLERY</h2>
+        <div class="gallery gallery-grid">
+          <figure class="meme-card" data-src="meme/chrome_6zg61hvL1l.png" data-cap="DISTRACTED BY $ROBINFLY">
+            <img src="meme/chrome_6zg61hvL1l.png" alt="Robinhood Flyly vs other memecoins meme" />
+            <figcaption>DISTRACTED BY $ROBINFLY</figcaption>
+          </figure>
+          <figure class="meme-card" data-src="meme/chrome_Cuk3VfTCeA.png" data-cap="SMALL FLY. BIGGER DREAMS">
+            <img src="meme/chrome_Cuk3VfTCeA.png" alt="Robinhood Flyly to the moon meme" />
+            <figcaption>SMALL FLY. BIGGER DREAMS</figcaption>
+          </figure>
+          <figure class="meme-card" data-src="meme/chrome_fGXSQQmJEQ.png" data-cap="A SMALL FLY CAN CHANGE IT">
+            <img src="meme/chrome_fGXSQQmJEQ.png" alt="A small fly can change a big world meme" />
+            <figcaption>A SMALL FLY CAN CHANGE IT</figcaption>
+          </figure>
+          <figure class="meme-card" data-src="meme/chrome_JtyyJ4NGSb.png" data-cap="FLYYING FOR THE PEOPLE">
+            <img src="meme/chrome_JtyyJ4NGSb.png" alt="Flyying for the people meme" />
+            <figcaption>FLYYING FOR THE PEOPLE</figcaption>
+          </figure>
+          <figure class="meme-card" data-src="meme/chrome_NHYNQGQYj0.png" data-cap="FLY. TRADE. HODL. REPEAT">
+            <img src="meme/chrome_NHYNQGQYj0.png" alt="Fly trade hodl repeat meme" />
+            <figcaption>FLY. TRADE. HODL. REPEAT</figcaption>
+          </figure>
+          <figure class="meme-card" data-src="meme/chrome_xqzw7BIGO1.png" data-cap="A FLY WITH A PURPOSE">
+            <img src="meme/chrome_xqzw7BIGO1.png" alt="Not just a fly, a fly with a purpose meme" />
+            <figcaption>A FLY WITH A PURPOSE</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="buy">
+      <div class="wrap reveal">
+        <h2>HOW TO BUY</h2>
+        <div class="steps">
+          <article class="step">
+            <div class="step-num">01</div>
+            <h3>WALLET</h3>
+            <p>Get a crypto wallet like MetaMask or Rabby and keep your seed phrase offline.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">02</div>
+            <h3>FUEL UP</h3>
+            <p>Add ETH (or the chain pair once live) so you can pay gas and swap into $ROBINFLY.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">03</div>
+            <h3>COPY CA</h3>
+            <p>Use the copy panel above. Official CA is <strong>0xcomingsoon</strong> until launch.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">04</div>
+            <h3>SWAP</h3>
+            <p>Paste the CA on your DEX, set slippage if needed, and join the swarm.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="chart">
+      <div class="wrap reveal">
+        <h2>DEXSCREENER</h2>
+        <div class="chart-frame pixel-border">
+          <iframe
+            title="Dexscreener chart"
+            src="https://dexscreener.com/ethereum/0xcomingsoon?embed=1&amp;theme=dark&amp;trades=0&amp;info=0"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section id="socials">
+      <div class="wrap reveal">
+        <h2>SOCIALS</h2>
+        <div class="panel pixel-border">
+          <p style="margin-bottom: 16px; color: var(--muted);">Follow the swarm. Chart lives on Dexscreener. The fly lives on X.</p>
+          <div class="socials">
+            <a class="btn" href="https://x.com/XXX" target="_blank" rel="noopener noreferrer">TWITTER / X</a>
+            <a class="btn" href="https://dexscreener.com/ethereum/0xcomingsoon" target="_blank" rel="noopener noreferrer">DEXSCREENER</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Meme preview">
+    <div class="lightbox-frame pixel-border">
+      <img id="lightbox-img" src="meme/chrome_6zg61hvL1l.png" alt="Selected meme" />
+      <div class="lightbox-bar">
+        <p id="lightbox-cap">DISTRACTED BY $ROBINFLY</p>
+        <div class="lightbox-nav">
+          <button type="button" id="lightbox-prev">PREV</button>
+          <button type="button" id="lightbox-next">NEXT</button>
+          <button type="button" id="lightbox-close">CLOSE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      $ROBINFLY — Robinhood Fly
+      <small>Not financial advice. Memecoin. Buzz at your own risk.</small>
+    </div>
+  </footer>
+
+  <script>
+    const ca = "0xcomingsoon";
+    const button = document.getElementById("copy-ca");
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(ca);
+      } catch (err) {
+        const box = document.getElementById("ca");
+        const range = document.createRange();
+        range.selectNodeContents(box);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        document.execCommand("copy");
+        selection.removeAllRanges();
+      }
+      button.textContent = "COPIED";
+      button.classList.add("copy-ok");
+      setTimeout(() => {
+        button.textContent = "COPY CA";
+        button.classList.remove("copy-ok");
+      }, 1400);
+    });
+
+    const reveals = document.querySelectorAll(".reveal");
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.16 });
+    reveals.forEach((el) => io.observe(el));
+
+    setTimeout(() => {
+      const boot = document.querySelector(".boot");
+      if (boot) boot.remove();
+    }, 2400);
+
+    const cards = [...document.querySelectorAll(".meme-card")];
+    const box = document.getElementById("lightbox");
+    const boxImg = document.getElementById("lightbox-img");
+    const boxCap = document.getElementById("lightbox-cap");
+    let memeIndex = 0;
+
+    function showMeme(i) {
+      memeIndex = (i + cards.length) % cards.length;
+      const card = cards[memeIndex];
+      boxImg.src = card.dataset.src;
+      boxImg.alt = card.querySelector("img").alt;
+      boxCap.textContent = card.dataset.cap;
+    }
+
+    function openMeme(i) {
+      showMeme(i);
+      box.classList.add("open");
+    }
+
+    function closeMeme() {
+      box.classList.remove("open");
+    }
+
+    cards.forEach((card, i) => {
+      card.addEventListener("click", () => openMeme(i));
+    });
+    document.getElementById("lightbox-prev").addEventListener("click", () => showMeme(memeIndex - 1));
+    document.getElementById("lightbox-next").addEventListener("click", () => showMeme(memeIndex + 1));
+    document.getElementById("lightbox-close").addEventListener("click", closeMeme);
+    box.addEventListener("click", (e) => {
+      if (e.target === box) closeMeme();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (!box.classList.contains("open")) return;
+      if (e.key === "Escape") closeMeme();
+      if (e.key === "ArrowLeft") showMeme(memeIndex - 1);
+      if (e.key === "ArrowRight") showMeme(memeIndex + 1);
+    });
+
+    (function startPixelRain() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const canvas = document.getElementById("pixel-rain");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const cell = 4;
+      let cols = 0;
+      let drops = [];
+
+      function resize() {
+        canvas.width = Math.max(1, Math.floor(window.innerWidth / cell));
+        canvas.height = Math.max(1, Math.floor(window.innerHeight / cell));
+        cols = canvas.width;
+        drops = Array.from({ length: cols }, () => ({
+          y: Math.random() * canvas.height,
+          speed: 0.35 + Math.random() * 1.4,
+          life: 4 + Math.floor(Math.random() * 12)
+        }));
+      }
+
+      function tick() {
+        ctx.fillStyle = "rgba(6, 16, 10, 0.18)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < drops.length; i += 1) {
+          const drop = drops[i];
+          const glow = drop.life > 8 ? "#7dff80" : "#00c805";
+          ctx.fillStyle = glow;
+          ctx.fillRect(i, Math.floor(drop.y), 1, 1);
+          if (drop.life > 6) {
+            ctx.fillStyle = "rgba(0, 200, 5, 0.35)";
+            ctx.fillRect(i, Math.floor(drop.y) - 1, 1, 1);
+          }
+          drop.y += drop.speed;
+          drop.life -= 0.08;
+          if (drop.y > canvas.height || drop.life <= 0) {
+            drop.y = -Math.random() * 12;
+            drop.speed = 0.35 + Math.random() * 1.4;
+            drop.life = 4 + Math.floor(Math.random() * 12);
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+
+      resize();
+      window.addEventListener("resize", resize);
+      tick();
+    })();
+  </script>
+</body>
+</html>
